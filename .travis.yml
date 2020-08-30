@@ -18,3 +18,12 @@ before_install:
   - brew upgrade cmake pkg-config && brew install ninja
   - mkdir build && cd build
 script: cmake .. -G Ninja -DFONT_CONFIGURATION=generic -DBUILD_SHARED_LIBS=OFF && ninja
+deploy:
+  provider: releases
+  skip_cleanup: true
+  file: build/*
+  api_key:
+    secure: "$API_KEY"
+  on:
+    tags: true #发布  tag版 时才进行发包   
+    draft: false # 不发表drafs

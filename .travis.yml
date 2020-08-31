@@ -20,10 +20,12 @@ before_install:
 script: cmake .. -G Ninja -DFONT_CONFIGURATION=generic -DBUILD_SHARED_LIBS=OFF && ninja
 before_deploy:
   # Set up git user name and tag this commit
-  - git config --local user.name "Travis"
-  - git config --local user.email "travis@qq.com"
-  - export TRAVIS_TAG=${TRAVIS_TAG:-$(date +'%Y%m%d%H%M%S')-$(git log --format=%h -1)}
-  - git tag $TRAVIS_TAG
+  if ! [[ $TRAVIS_TAG ]]; then
+    git config --local user.name "Travis"
+    git config --local user.email "travis@qq.com"
+    export TRAVIS_TAG=${TRAVIS_TAG:-$(date +'%Y%m%d%H%M%S')-$(git log --format=%h -1)}
+    git tag $TRAVIS_TAG
+  fi
 deploy:
   provider: releases
   skip_cleanup: true
